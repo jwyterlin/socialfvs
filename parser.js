@@ -1,12 +1,14 @@
 const request = require('request');
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const AnswerModel = require('./answer.js');
+const NodeCache = require("node-cache");
+const myCache = new NodeCache();
 
 class Parser {
 
   // Handles messages events
   handleMessage(sender_psid, received_message) {
-    
+
     let response;
 
     console.log(sender_psid);
@@ -14,42 +16,103 @@ class Parser {
     console.log(received_message);
     
     // Checks if the message contains text
-    if (received_message.text) {    
+    if (received_message.text) {
+
       // Create the payload for a basic text message, which
       // will be added to the body of our request to the Send API
-
       let answerText = received_message.text;
       let userId = sender_psid;
 
-      if (received_message.quick_reply) {
-        let payload = received_message.quick_reply.payload
-        if (payload) {
-          if (payload === 'answer1-q1'||payload === 'answer2-q1'||payload === 'answer3-q1'||payload === 'answer4-q1') {
+      let questionId = myCache.get("questionId");
 
-            let questionId = "1";
-            this.saveAnswer(answerText, questionId, userId);
-
-            let text = `Second question - how strongly do you agree with the following statement? "${"I am confident that I have control over my future sources of income."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
-            let answerIds = ["answer1-q2","answer2-q2","answer3-q2","answer4-q2"];
-            response = this.responseFourOptions(text, answerIds);
-
-          } else if (payload === 'answer1-q2'||payload === 'answer2-q2'||payload === 'answer3-q2'||payload === 'answer4-q2') {
-
-            let questionId = "2";
-            this.saveAnswer(answerText, questionId, userId);
-
-            let text = `Third question - how strongly do you agree with the following statement? "${"Most of my friends have their own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
-            let answerIds = ["answer1-q3","answer2-q3","answer3-q3","answer4-q3"];
-            response = this.responseFourOptions(text, answerIds);
-            
-          } else if (payload === 'answer1-q3'||payload === 'answer2-q3'||payload === 'answer3-q3'||payload === 'answer4-q3') {
-            let questionId = "3";
-            this.saveAnswer(answerText, questionId, userId);
-            response = {"text": "Chat finished!"}
-          }
-        }
-      } else {
+      if (questionId == undefined) {
         response = this.initialResponse();
+      } else if (questionId === "1") {
+        let questionId = "1";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Second question - how strongly do you agree with the following statement? "${"I am confident that I have control over my future sources of income."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+        let answerIds = ["answer1-q2","answer2-q2","answer3-q2","answer4-q2"];
+        response = this.responseFourOptions(text, answerIds);
+        myCache.set("questionId","2", 3600);
+      } else if (questionId === "2") {
+        let questionId = "2";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Third question - how strongly do you agree with the following statement? "${"Most of my friends have their own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+        let answerIds = ["answer1-q3","answer2-q3","answer3-q3","answer4-q3"];
+        response = this.responseFourOptions(text, answerIds);
+        myCache.set("questionId","3", 3600);
+      } else if (questionId === "3") {
+        let questionId = "3";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Fourth question - how strongly do you agree with the following statement? "${"I am responsible for the successes and failures in my life, and not chance."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+        let answerIds = ["answer1-q4","answer2-q4","answer3-q4","answer4-q4"];
+        response = this.responseFourOptions(text, answerIds);
+        myCache.set("questionId","4", 3600);
+      } else if (questionId === "4") {
+        let questionId = "4";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Fifth question - how strongly do you agree with the following statement? "${"I consider myself to be more ambitious than most of the people I know."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is “${"agree completely."}"`;
+        let answerIds = ["answer1-q5","answer2-q5","answer3-q5","answer4-q5"];
+        response = this.responseFourOptions(text, answerIds);
+        myCache.set("questionId","5", 3600);
+      } else if (questionId === "5") {
+        let questionId = "5";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Sixth question - how strongly do you agree with the following statement? "${"In general, I rely on my instincts."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+        let answerIds = ["answer1-q6","answer2-q6","answer3-q6","answer4-q6"];
+        response = this.responseFourOptions(text, answerIds);
+        myCache.set("questionId","6", 3600);
+      } else if (questionId === "6") {
+        let questionId = "6";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Seventh question - how strongly do you agree with the following statement? "${"I like working collaboratively in a group, as opposed to leading others."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+        let answerIds = ["answer1-q7","answer2-q7","answer3-q7","answer4-q7"];
+        response = this.responseFourOptions(text, answerIds);
+        myCache.set("questionId","7", 3600);
+      } else if (questionId === "7") {
+        let questionId = "7";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Thank you for answering those questions. Now, a few more about yourself. Could you tell me how old you are, in years. For example, if you are 30 years old, enter 30.`;
+        response = {"text": text};
+        myCache.set("questionId","8", 3600);
+      } else if (questionId === "8") {
+        let questionId = "8";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `How many dependents do you have? Please enter a number.`;
+        response = {"text": text};
+        myCache.set("questionId","9", 3600);
+      } else if (questionId === "9") {
+        let questionId = "9";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Could you please tell me what you would use the loan for?`;
+        response = {"text": text};
+        myCache.set("questionId","10", 3600);
+      } else if (questionId === "10") {
+        let questionId = "10";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Could you also tell me a little bit about your business, and your experience in it? Please use between 3 and 10 sentences.`;
+        response = {"text": text};
+        myCache.set("questionId","11", 3600);
+      } else if (questionId === "11") {
+        let questionId = "11";
+        this.saveAnswer(answerText, questionId, userId);
+        let text = `Final. Could you please share the Facebook or Instagram page of your business, if you have one? Please enter None if you don’t.`;
+        response = {"text": text};
+        myCache.set("questionId","12", 3600);
+      } else if (questionId === "12") {
+        let questionId = "12";
+        this.saveAnswer(answerText, questionId, userId, function (error) {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          AnswerModel.deleteMany({userId: userId}, function (err, _) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        });
+        myCache.del("questionId");
       }
 
     }
@@ -73,11 +136,10 @@ class Parser {
 
     // Set the response based on the postback payload
     if (payload === 'yes-q0') {
-
       let text = `Great, thank you! First question - how strongly do you agree with the following statement? "${"I prefer the stability that a 9 to 5 job provides over running my own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
       let answerIds = ["answer1-q1","answer2-q1","answer3-q1","answer4-q1"];
       response = this.responseFourOptions(text, answerIds);
-
+      myCache.set("questionId","1", 3600);
     }
     
     // Send the message to acknowledge the postback
@@ -133,6 +195,10 @@ class Parser {
   }
 
   saveAnswer(answerText, questionId, userId) {
+    this.saveAnswer(answerText, questionId, userId, null);
+  }
+
+  saveAnswer(answerText, questionId, userId, callback) {
     var answer = new AnswerModel( { text: answerText, questionId: questionId, userId: userId } );
     answer.save( function( err ) {
       if ( err ) {
@@ -140,6 +206,9 @@ class Parser {
         return err;
       } else {
         console.log( "Answer saved" );
+      }
+      if (callback) {
+        callback(err);
       }
     });
   }
@@ -161,8 +230,14 @@ class Parser {
     }
   }
 
+  deleteAllAnswers(userId) {
+    AnswerModel.deleteMany({userId: userId}, function (err, _) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+
 }
 
 module.exports = Parser;
-
-//teste

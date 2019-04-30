@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
+    "memcached": "^2.2.2",
     "mongoose": "^5.5.4",
+    "node-cache": "^4.2.0",
     "request": "^2.88.0"
   }
 }
