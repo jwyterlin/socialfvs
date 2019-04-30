@@ -1,5 +1,6 @@
 const request = require('request');
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+const AnswerModel = require('./answer.js');
 
 class Parser {
 
@@ -17,64 +18,33 @@ class Parser {
       // Create the payload for a basic text message, which
       // will be added to the body of our request to the Send API
 
+      let answerText = received_message.text;
+      let userId = sender_psid;
+
       if (received_message.quick_reply) {
         let payload = received_message.quick_reply.payload
         if (payload) {
           if (payload === 'answer1-q1'||payload === 'answer2-q1'||payload === 'answer3-q1'||payload === 'answer4-q1') {
 
-            response = {
-                  "text": `Second question - how strongly do you agree with the following statement? "${"I am confident that I have control over my future sources of income."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`,
-                  "quick_replies": [{
-                      "content_type":"text",
-                      "title":"1",
-                      "payload":"answer1-q2",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"2",
-                      "payload":"answer2-q2",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"3",
-                      "payload":"answer3-q2",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"4",
-                      "payload":"answer4-q2",
-                      "image_url":""
-                  }]
-            }
+            let questionId = "1";
+            this.saveAnswer(answerText, questionId, userId);
 
-            
-            
+            let text = `Second question - how strongly do you agree with the following statement? "${"I am confident that I have control over my future sources of income."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+            let answerIds = ["answer1-q2","answer2-q2","answer3-q2","answer4-q2"];
+            response = this.responseFourOptions(text, answerIds);
+
           } else if (payload === 'answer1-q2'||payload === 'answer2-q2'||payload === 'answer3-q2'||payload === 'answer4-q2') {
-            response = {
-                  "text": `Third question - how strongly do you agree with the following statement? "${"Most of my friends have their own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`,
-                  "quick_replies": [{
-                      "content_type":"text",
-                      "title":"1",
-                      "payload":"answer1-q3",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"2",
-                      "payload":"answer2-q3",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"3",
-                      "payload":"answer3-q3",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"4",
-                      "payload":"answer4-q3",
-                      "image_url":""
-                  }]
-            }
+
+            let questionId = "2";
+            this.saveAnswer(answerText, questionId, userId);
+
+            let text = `Third question - how strongly do you agree with the following statement? "${"Most of my friends have their own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+            let answerIds = ["answer1-q3","answer2-q3","answer3-q3","answer4-q3"];
+            response = this.responseFourOptions(text, answerIds);
+            
           } else if (payload === 'answer1-q3'||payload === 'answer2-q3'||payload === 'answer3-q3'||payload === 'answer4-q3') {
+            let questionId = "3";
+            this.saveAnswer(answerText, questionId, userId);
             response = {"text": "Chat finished!"}
           }
         }
@@ -95,35 +65,6 @@ class Parser {
         }
       }
 
-    } else if (received_message.attachments) {
-      
-      // Get the URL of the message attachment
-      let attachment_url = received_message.attachments[0].payload.url;
-      response = {
-        "attachment": {
-          "type": "template",
-          "payload": {
-            "template_type": "generic",
-            "elements": [{
-              "title": "Is this the right picture?",
-              "subtitle": "Tap a button to answer.",
-              "image_url": attachment_url,
-              "buttons": [
-                {
-                  "type": "postback",
-                  "title": "Yes!",
-                  "payload": "yes",
-                },
-                {
-                  "type": "postback",
-                  "title": "No!",
-                  "payload": "no",
-                }
-              ],
-            }]
-          }
-        }
-      }
     }
     
     // Send the response message
@@ -145,30 +86,11 @@ class Parser {
 
     // Set the response based on the postback payload
     if (payload === 'yes-q0') {
-      response = {
-                  "text": `Great, thank you! First question - how strongly do you agree with the following statement? "${"I prefer the stability that a 9 to 5 job provides over running my own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`,
-                  "quick_replies": [{
-                      "content_type":"text",
-                      "title":"1",
-                      "payload":"answer1-q1",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"2",
-                      "payload":"answer2-q1",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"3",
-                      "payload":"answer3-q1",
-                      "image_url":""
-                    },{
-                      "content_type":"text",
-                      "title":"4",
-                      "payload":"answer4-q1",
-                      "image_url":""
-                  }]
-      }
+
+      let text = `Great, thank you! First question - how strongly do you agree with the following statement? "${"I prefer the stability that a 9 to 5 job provides over running my own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
+      let answerIds = ["answer1-q1","answer2-q1","answer3-q1","answer4-q1"];
+      response = this.responseFourOptions(text, answerIds);
+
     }
     
     // Send the message to acknowledge the postback
@@ -202,6 +124,37 @@ class Parser {
       }
     });
 
+  }
+
+  responseFourOptions(text, answerIds) {
+    return {
+      "text": text,
+      "quick_replies": [this.answerQuickReply("1", answerIds[0]),
+                        this.answerQuickReply("2", answerIds[1]),
+                        this.answerQuickReply("3", answerIds[2]),
+                        this.answerQuickReply("4", answerIds[3])]
+    }
+  }
+
+  answerQuickReply(title, answerId) {
+    return {
+      "content_type":"text",
+      "title":title,
+      "payload":answerId,
+      "image_url":""
+    }
+  }
+
+  saveAnswer(answerText, questionId, userId) {
+    var answer = new AnswerModel( { text: answerText, questionId: questionId, userId: userId } );
+    answer.save( function( err ) {
+      if ( err ) {
+        console.log( "Error! " + err.message );
+        return err;
+      } else {
+        console.log( "Answer saved" );
+      }
+    });
   }
 
 }

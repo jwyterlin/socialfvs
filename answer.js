@@ -1,8 +1,7 @@
-
-require('./database');
+const Database = require('./database');
 
 const database = new Database();
-const mongoose = database.mongoose;
+const mongoose = database.connection();
 
 const answerModelSchema = new mongoose.Schema({
   text: { type: String, required: true },

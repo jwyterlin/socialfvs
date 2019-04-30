@@ -1,7 +1,7 @@
-class Database {
+// Import the mongoose module
+const mongoose = require('mongoose');
 
-   	// Import the mongoose module
-   	mongoose = require('mongoose');
+class Database {
 
    	// Set up default mongoose connection
    	mongoDB = 'mongodb://127.0.0.1/socialFVSDatabase';
@@ -10,11 +10,15 @@ class Database {
    	db = mongoose.connection;
 
    	constructor() {
-   		connect()
+   		this.connect()
    	}
 
 	connect() {
-		mongoose.connect(mongoDB, { useNewUrlParser: true });
+		mongoose.connect(this.mongoDB, { useNewUrlParser: true });
+	}
+
+	connection() {
+		return mongoose;
 	}
 
 }
