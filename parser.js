@@ -1,11 +1,10 @@
-const request = require('request');
+const request = require("request");
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const AnswerModel = require('./answer.js');
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
 
 class Parser {
-
   // Handles messages events
   handleMessage(sender_psid, received_message) {
 
@@ -14,7 +13,7 @@ class Parser {
     console.log(sender_psid);
     console.log("received_message");
     console.log(received_message);
-    
+
     // Checks if the message contains text
     if (received_message.text) {
 
@@ -114,21 +113,18 @@ class Parser {
         });
         myCache.del("questionId");
       }
-
     }
-    
+
     // Send the response message
     this.callSendAPI(sender_psid, response);
-
   }
 
   // Handles messaging_postbacks events
   handlePostback(sender_psid, received_postback) {
-
     console.log("handlePostback");
 
     let response;
-    
+
     // Get the payload for the postback
     let payload = received_postback.payload;
 
@@ -137,61 +133,64 @@ class Parser {
     // Set the response based on the postback payload
     if (payload === 'yes-q0') {
       let text = `Great, thank you! First question - how strongly do you agree with the following statement? "${"I prefer the stability that a 9 to 5 job provides over running my own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
-      let answerIds = ["answer1-q1","answer2-q1","answer3-q1","answer4-q1"];
+      let answerIds = ["answer1-q1", "answer2-q1", "answer3-q1", "answer4-q1"];
       response = this.responseFourOptions(text, answerIds);
       myCache.set("questionId","1", 3600);
     }
-    
+
     // Send the message to acknowledge the postback
     this.callSendAPI(sender_psid, response);
-
   }
 
   // Sends response messages via the Send API
   callSendAPI(sender_psid, response) {
     // Construct the message body
     let request_body = {
-      "messaging_type": "RESPONSE",
-      "recipient": {
-        "id": sender_psid
+      messaging_type: "RESPONSE",
+      recipient: {
+        id: sender_psid
       },
-      "message": response
+      message: response
     };
 
     // Send the HTTP request to the Messenger Platform
-    request({
-      uri: "https://graph.facebook.com/v3.2/me/messages",
-      qs: { "access_token": PAGE_ACCESS_TOKEN },
-      method: "POST",
-      headers: {'Content-type': 'application/json'},
-      json: request_body
-    }, (err, res, body) => {
-      if (!err) {
-        console.log('message sent!')
-      } else {
-        console.error("Unable to send message:" + err);
+    request(
+      {
+        uri: "https://graph.facebook.com/v3.2/me/messages",
+        qs: { access_token: PAGE_ACCESS_TOKEN },
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        json: request_body
+      },
+      (err, res, body) => {
+        if (!err) {
+          console.log("message sent!");
+        } else {
+          console.error("Unable to send message:" + err);
+        }
       }
-    });
-
+    );
   }
 
   responseFourOptions(text, answerIds) {
     return {
-      "text": text,
-      "quick_replies": [this.answerQuickReply("1", answerIds[0]),
-                        this.answerQuickReply("2", answerIds[1]),
-                        this.answerQuickReply("3", answerIds[2]),
-                        this.answerQuickReply("4", answerIds[3])]
-    }
+      text: text,
+      quick_replies: [
+        this.answerQuickReply("1", answerIds[0]),
+        this.answerQuickReply("2", answerIds[1]),
+        this.answerQuickReply("3", answerIds[2]),
+        this.answerQuickReply("4", answerIds[3])
+      ]
+    };
   }
 
   answerQuickReply(title, answerId) {
     return {
-      "content_type":"text",
-      "title":title,
-      "payload":answerId,
-      "image_url":""
-    }
+      content_type: "text",
+      title: title,
+      payload: answerId,
+      image_url: ""
+    };
   }
 
   saveAnswer(answerText, questionId, userId) {
@@ -205,7 +204,7 @@ class Parser {
         console.log( "Error! " + err.message );
         return err;
       } else {
-        console.log( "Answer saved" );
+        console.log("Answer saved");
       }
       if (callback) {
         callback(err);
@@ -228,14 +227,6 @@ class Parser {
         }
       }
     }
-  }
-
-  deleteAllAnswers(userId) {
-    AnswerModel.deleteMany({userId: userId}, function (err, _) {
-      if (err) {
-        console.log(err);
-      }
-    });
   }
 
 }
