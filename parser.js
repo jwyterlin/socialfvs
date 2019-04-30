@@ -21,6 +21,7 @@ class Parser {
         let payload = received_message.quick_reply.payload
         if (payload) {
           if (payload === 'answer1-q1'||payload === 'answer2-q1'||payload === 'answer3-q1'||payload === 'answer4-q1') {
+
             response = {
                   "text": `Second question - how strongly do you agree with the following statement? "${"I am confident that I have control over my future sources of income."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`,
                   "quick_replies": [{
@@ -45,6 +46,9 @@ class Parser {
                       "image_url":""
                   }]
             }
+
+            
+            
           } else if (payload === 'answer1-q2'||payload === 'answer2-q2'||payload === 'answer3-q2'||payload === 'answer4-q2') {
             response = {
                   "text": `Third question - how strongly do you agree with the following statement? "${"Most of my friends have their own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`,
