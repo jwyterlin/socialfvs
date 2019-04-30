@@ -132,6 +132,7 @@ class Parser {
           }
         }
       } else {
+<<<<<<< HEAD
         response = {
           attachment: {
             type: "template",
@@ -149,6 +150,9 @@ class Parser {
             }
           }
         };
+=======
+        response = this.initialResponse();
+>>>>>>> c02e1b738814c1f2b13e4cb7473c038c9d50ae4a
       }
     }
 
@@ -244,6 +248,27 @@ class Parser {
       }
     });
   }
+<<<<<<< HEAD
+=======
+
+  initialResponse() {
+    return {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "button",
+          "text": "Thank you for your interest in receiving a social credit assessment that can be used for loan applications in the future. I would like to ask you a few questions before I can make an assessment. Shall we continue?",
+          "buttons": [{
+            "type": "postback",
+            "title": "Yes!",
+            "payload": "yes-q0",
+          }]
+        }
+      }
+    }
+  }
+
+>>>>>>> c02e1b738814c1f2b13e4cb7473c038c9d50ae4a
 }
 
 module.exports = Parser;
