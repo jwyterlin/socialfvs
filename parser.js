@@ -49,20 +49,7 @@ class Parser {
           }
         }
       } else {
-        response = {
-          "attachment": {
-            "type": "template",
-            "payload": {
-              "template_type": "button",
-              "text": "Thank you for your interest in receiving a social credit assessment that can be used for loan applications in the future. I would like to ask you a few questions before I can make an assessment. Shall we continue?",
-              "buttons": [{
-                         "type": "postback",
-                         "title": "Yes!",
-                         "payload": "yes-q0",
-                       }]
-            }
-          }
-        }
+        response = this.initialResponse();
       }
 
     }
@@ -155,6 +142,23 @@ class Parser {
         console.log( "Answer saved" );
       }
     });
+  }
+
+  initialResponse() {
+    return {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "button",
+          "text": "Thank you for your interest in receiving a social credit assessment that can be used for loan applications in the future. I would like to ask you a few questions before I can make an assessment. Shall we continue?",
+          "buttons": [{
+            "type": "postback",
+            "title": "Yes!",
+            "payload": "yes-q0",
+          }]
+        }
+      }
+    }
   }
 
 }
