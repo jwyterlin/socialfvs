@@ -3,6 +3,7 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const AnswerModel = require('./answer.js');
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
+const NareemService = require("./nareemService.js");
 
 class Parser {
   // Handles messages events
@@ -100,11 +101,28 @@ class Parser {
         myCache.set("questionId","12", 3600);
       } else if (questionId === "12") {
         let questionId = "12";
+
+        var myThis = {
+          calculateEntreprensurialScore: function() {
+            return this;
+          },
+          getAnswers: function(callback) {
+            return this;
+          },
+          callSendAPI: function(sender_psid, response) {
+            return this;
+          }
+        };
+        myThis.calculateEntreprensurialScore = this.calculateEntreprensurialScore;
+        myThis.getAnswers = this.getAnswers;
+        myThis.callSendAPI = this.callSendAPI;
+
         this.saveAnswer(answerText, questionId, userId, function (error) {
           if (error) {
             console.log(error);
             return;
           }
+          myThis.calculateEntreprensurialScore(userId);
           AnswerModel.deleteMany({userId: userId}, function (err, _) {
             if (err) {
               console.log(err);
@@ -117,6 +135,112 @@ class Parser {
 
     // Send the response message
     this.callSendAPI(sender_psid, response);
+  }
+
+  calculateEntreprensurialScore(userId) {
+    var myThis = {
+          callSendAPI: function(sender_psid, response) {
+            return this;
+          }
+        };
+    myThis.callSendAPI = this.callSendAPI;
+    this.getAnswers(function (answers) {
+      var score = 0;
+      var age = 0;
+      var numberOfDependents = 0;
+      var descriptionOfBusiness = "";
+      var facebookInstagramLink = "";
+      answers.forEach(function(answer) {
+        if (answer.questionId == "1") {
+          if (answer.text == "1") {
+            score += 1;
+          }
+        } else if (answer.questionId == "2") {
+          if (answer.text == "4") {
+            score += 1;
+          }
+        } else if (answer.questionId == "3") {
+          if (answer.text == "4") {
+            score += 1;
+          }
+        } else if (answer.questionId == "4") {
+          if (answer.text == "4") {
+            score += 1;
+          }
+        } else if (answer.questionId == "5") {
+          if (answer.text == "4") {
+            score += 1;
+          }
+        } else if (answer.questionId == "6") {
+          if (answer.text == "4") {
+            score += 1;
+          }
+        } else if (answer.questionId == "7") {
+          if (answer.text == "1") {
+            score += 1;
+          }
+        } else if (answer.questionId == "8") {
+          age = answer.text;
+        } else if (answer.questionId == "9") {
+          numberOfDependents = answer.text;
+        } else if (answer.questionId == "11") {
+          descriptionOfBusiness = answer.text;
+        } else if (answer.questionId == "11") {
+          facebookInstagramLink = answer.text;
+        }
+      });
+
+      var v = 0.0;
+      if (score > 5) {
+        v = 1.0;
+      } else if (score >= 3 && score <= 4) {
+        v = 0.5;
+      }
+
+      var w = 0;
+      if (age >= 30 && age <= 50) {
+        var w = 1;
+      }
+
+      var x = 0;
+      if (numberOfDependents >= 1 && numberOfDependents <= 2) {
+        x = 1;
+      } else if (numberOfDependents > 2) {
+        x = 0.5;
+      }
+
+      let nareemService = new NareemService();
+      nareemService.sendToSentimentEndpoint(userId, descriptionOfBusiness, function(sentiment, uid) {
+
+        var y = sentiment;
+
+        nareemService.sendToSentimentEndpoint(userId, facebookInstagramLink, function(anotherSentiment, uid) {
+
+          var z = anotherSentiment;
+
+          var compositeScore = ((3*v)+w+x+y+(3*z))/5
+
+          var recommendation = "";
+          if (compositeScore < 0.5) {
+            // not yet recommend
+            recommendation = "Not yet recommend";
+          } else if (compositeScore > 0.9) {
+            // strongly recommend
+            recommendation = "Strongly recommend";
+          } else {
+            // recomend with reservation
+            recommendation = "Recommend with reservation";
+          }
+
+          var response = {"text": recommendation};
+          console.log(response);
+          myThis.callSendAPI(userId, response);
+
+        });
+
+      });
+
+    });
   }
 
   // Handles messaging_postbacks events
@@ -209,6 +333,12 @@ class Parser {
       if (callback) {
         callback(err);
       }
+    });
+  }
+
+  getAnswers(callback) {
+    AnswerModel.find({}, function(err, answers) {
+      callback(answers);
     });
   }
 

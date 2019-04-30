@@ -2,7 +2,7 @@ const request = require('request');
 
 class NareemService {
 
-	sendToSentimentEndpoint(sender_psid, answerText) {
+	sendToSentimentEndpoint(sender_psid, answerText, callback) {
     
     	// Construct the message body
     	let request_body = {
@@ -20,6 +20,7 @@ class NareemService {
     	}, (err, res, body) => {
       		if (!err) {
         		console.log(body);
+        		callback(body.sentiment, body.uid);
       		} else {
         		console.error("Unable to send message:" + err);
       		}
