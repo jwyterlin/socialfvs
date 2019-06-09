@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  app:
+    container_name: webhook-node
+    restart: always
+    build: .
+    ports: 
+      - "1337:1337"
+    command: npm start
+    volumes:
+      - .:/usr/src/app
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27017:27017'

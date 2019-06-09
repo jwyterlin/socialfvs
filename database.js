@@ -5,7 +5,7 @@ class Database {
 
    	constructor() {
    		// Set up default mongoose connection
-   		this.mongoDB = 'mongodb://127.0.0.1/socialFVSDatabase';
+   		this.mongoDB = 'mongodb://mongo:27017/socialFVSDatabase';
    		// Get the default connection
    		this.db = mongoose.connection;	
    		this.connect()
