@@ -11,12 +11,6 @@ class Parser {
 
     let response;
 
-    console.log(sender_psid);
-    console.log("received_message jhonathan");
-    console.log(received_message);
-    console.log("stringify received_message");
-    console.log(JSON.stringify(received_message,null,'\t'));
-
     // Checks if the message contains text
     if (received_message.text) {
 
@@ -235,7 +229,6 @@ class Parser {
           }
 
           var response = {"text": recommendation};
-          console.log(response);
           myThis.callSendAPI(userId, response);
 
         });
@@ -247,14 +240,11 @@ class Parser {
 
   // Handles messaging_postbacks events
   handlePostback(sender_psid, received_postback) {
-    console.log("handlePostback");
 
     let response;
 
     // Get the payload for the postback
     let payload = received_postback.payload;
-
-    console.log(received_postback);
 
     // Set the response based on the postback payload
     if (payload === 'yes-q0') {
@@ -278,9 +268,6 @@ class Parser {
       },
       message: response
     };
-
-    console.log("PAGE_ACCESS_TOKEN");
-    console.log(PAGE_ACCESS_TOKEN);
 
     // Send the HTTP request to the Messenger Platform
     request(
