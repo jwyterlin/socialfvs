@@ -1,5 +1,6 @@
 require('./index.js');
 const Parser = require('./parser.js');
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 class Webhook {
 
@@ -53,9 +54,6 @@ class Webhook {
 		createGetListener() {
 			// Adds support for GET requests to our webhook
 			this.app.get('/webhook', (req, res) => {
-
-	  			// Your verify token. Should be a random string.
-	  			let VERIFY_TOKEN = "facebookf82019socialfvs";
 
 	  			// Parse the query params
 	  			let mode = req.query['hub.mode'];

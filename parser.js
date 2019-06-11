@@ -12,15 +12,13 @@ class Parser {
     let response;
 
     console.log(sender_psid);
-    console.log("received_message");
+    console.log("received_message jhonathan");
     console.log(received_message);
-
-    console.log("vasco");
+    console.log("stringify received_message");
+    console.log(JSON.stringify(received_message,null,'\t'));
 
     // Checks if the message contains text
     if (received_message.text) {
-
-      console.log("A");
 
       // Create the payload for a basic text message, which
       // will be added to the body of our request to the Send API
@@ -29,13 +27,9 @@ class Parser {
 
       let questionId = myCache.get("questionId");
 
-      console.log("questionId: " + questionId );
-
       if (questionId == undefined) {
-        console.log("B");
         response = this.initialResponse();
       } else if (questionId === "1") {
-        console.log("C");
         let questionId = "1";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Second question - how strongly do you agree with the following statement? "${"I am confident that I have control over my future sources of income."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
@@ -43,7 +37,6 @@ class Parser {
         response = this.responseFourOptions(text, answerIds);
         myCache.set("questionId","2", 3600);
       } else if (questionId === "2") {
-        console.log("D");
         let questionId = "2";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Third question - how strongly do you agree with the following statement? "${"Most of my friends have their own business."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
@@ -51,7 +44,6 @@ class Parser {
         response = this.responseFourOptions(text, answerIds);
         myCache.set("questionId","3", 3600);
       } else if (questionId === "3") {
-        console.log("E");
         let questionId = "3";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Fourth question - how strongly do you agree with the following statement? "${"I am responsible for the successes and failures in my life, and not chance."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
@@ -59,7 +51,6 @@ class Parser {
         response = this.responseFourOptions(text, answerIds);
         myCache.set("questionId","4", 3600);
       } else if (questionId === "4") {
-        console.log("F");
         let questionId = "4";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Fifth question - how strongly do you agree with the following statement? "${"I consider myself to be more ambitious than most of the people I know."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is “${"agree completely."}"`;
@@ -67,7 +58,6 @@ class Parser {
         response = this.responseFourOptions(text, answerIds);
         myCache.set("questionId","5", 3600);
       } else if (questionId === "5") {
-        console.log("G");
         let questionId = "5";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Sixth question - how strongly do you agree with the following statement? "${"In general, I rely on my instincts."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
@@ -75,7 +65,6 @@ class Parser {
         response = this.responseFourOptions(text, answerIds);
         myCache.set("questionId","6", 3600);
       } else if (questionId === "6") {
-        console.log("H");
         let questionId = "6";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Seventh question - how strongly do you agree with the following statement? "${"I like working collaboratively in a group, as opposed to leading others."}" Choose a score between 1 and 4, where 1 is "${"disagree completely,"}" 2 is "${"disagree somewhat,"}" 3 is "${"agree somewhat,"}" and 4 is "${"agree completely."}"`;
@@ -83,42 +72,36 @@ class Parser {
         response = this.responseFourOptions(text, answerIds);
         myCache.set("questionId","7", 3600);
       } else if (questionId === "7") {
-        console.log("I");
         let questionId = "7";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Thank you for answering those questions. Now, a few more about yourself. Could you tell me how old you are, in years. For example, if you are 30 years old, enter 30.`;
         response = {"text": text};
         myCache.set("questionId","8", 3600);
       } else if (questionId === "8") {
-        console.log("J");
         let questionId = "8";
         this.saveAnswer(answerText, questionId, userId);
         let text = `How many dependents do you have? Please enter a number.`;
         response = {"text": text};
         myCache.set("questionId","9", 3600);
       } else if (questionId === "9") {
-        console.log("K");
         let questionId = "9";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Could you please tell me what you would use the loan for?`;
         response = {"text": text};
         myCache.set("questionId","10", 3600);
       } else if (questionId === "10") {
-        console.log("L");
         let questionId = "10";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Could you also tell me a little bit about your business, and your experience in it? Please use between 3 and 10 sentences.`;
         response = {"text": text};
         myCache.set("questionId","11", 3600);
       } else if (questionId === "11") {
-        console.log("M");
         let questionId = "11";
         this.saveAnswer(answerText, questionId, userId);
         let text = `Final. Could you please share the Facebook or Instagram page of your business, if you have one? Please enter None if you don’t.`;
         response = {"text": text};
         myCache.set("questionId","12", 3600);
       } else if (questionId === "12") {
-        console.log("N");
         let questionId = "12";
 
         var myThis = {
@@ -151,8 +134,6 @@ class Parser {
         myCache.del("questionId");
       }
     }
-
-    console.log("flamengo");
 
     // Send the response message
     this.callSendAPI(sender_psid, response);
@@ -298,7 +279,8 @@ class Parser {
       message: response
     };
 
-    console.log("Sending response: " + request_body);
+    console.log("PAGE_ACCESS_TOKEN");
+    console.log(PAGE_ACCESS_TOKEN);
 
     // Send the HTTP request to the Messenger Platform
     request(

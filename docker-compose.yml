@@ -8,8 +8,8 @@ services:
     ports: 
       - "1337:1337"
     command: npm start
-    volumes:
-      - .:/usr/src/app
+    env_file:
+     - ./api.env
     links:
       - mongo
   mongo:
