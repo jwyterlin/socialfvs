@@ -133,36 +133,36 @@ def getTopics(clusters,text):
 
 app = Flask(__name__)
 CORS(app)
-# model = pyfasttext.FastText()
-# model.load_model("SentModelv2.bin")
-#
-# #input format of {"text":str}
-# @app.route('/sentiment-basic', methods=['POST'])
-# def sentiment_basic():
-#     try:
-#         data = request.get_json()
-#
-#         if data==None:
-#             try:
-#                 text = request.form['text']
-#                 uid = request.form['uid']
-#             except KeyError:
-#                 return "Error: bad request"
-#         else:
-#             try:
-#                 text = data['text']
-#                 uid = data['uid']
-#             except KeyError:
-#                 return "Error: bad request"
-#         fullpred = model.predict_proba([text])
-#         type = int(fullpred[0][0][0])-1
-#         if type==0:
-#             proba = 1-float(fullpred[0][0][1])
-#         else:
-#             proba = float(fullpred[0][0][1])
-#     except Exception as e:
-#         return "Other error: " + str(e)
-#     return str({'sentiment':proba,'uid':uid})
+model = pyfasttext.FastText()
+model.load_model("SentModelv2.bin")
+
+#input format of {"text":str}
+@app.route('/sentiment-basic', methods=['POST'])
+def sentiment_basic():
+    try:
+        data = request.get_json()
+
+        if data==None:
+            try:
+                text = request.form['text']
+                uid = request.form['uid']
+            except KeyError:
+                return "Error: bad request"
+        else:
+            try:
+                text = data['text']
+                uid = data['uid']
+            except KeyError:
+                return "Error: bad request"
+        fullpred = model.predict_proba([text])
+        type = int(fullpred[0][0][0])-1
+        if type==0:
+            proba = 1-float(fullpred[0][0][1])
+        else:
+            proba = float(fullpred[0][0][1])
+    except Exception as e:
+        return "Other error: " + str(e)
+    return str({'sentiment':proba,'uid':uid})
 def cap(n):
     if n>1.0:
         return 1.0
