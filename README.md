@@ -11,5 +11,3 @@ https://devpost.com/software/social_score
 If you want test the application, just start a chat with our chatbot in the Facebook page:
 
 https://www.facebook.com/Social-FVS-427788541364328
-
-[![Jhonathan's github stats](https://github-readme-stats.vercel.app/api?username=jwyterlin)](https://github.com/anuraghazra/github-readme-stats)
